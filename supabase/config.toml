@@ -1,0 +1,2 @@
+[functions.competition-integrations]
+verify_jwt = true

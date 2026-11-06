@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+const p='src/App.jsx'; let s=fs.readFileSync(p,'utf8');
+s=s.replace("<Home {...common}/ >", "<Home {...common}/ >");
+s=s.replace("{page==='home'&&<Home {...common}/ >}", "{page==='home'&&<Home {...common}/ >}{page==='competition'&&<CompetitionDetails competition={(db.competitions||[]).find(c=>c.id===selectedCompetitionId)} participants={db.participants} go={go}/ >}");
+s=s.replace("function Home({go,db}){return <main>","function Home({go,db}){return <main>");
+const afterHero='</section>\n <section className="stats-band">';
+if(!s.includes(afterHero)) throw new Error('Home hero/statistics marker missing');
+s=s.replace(afterHero,'</section><CompetitionListings competitions={db.competitions||[]} go={go}/><section className="stats-band">');
+s=s.replace("function Register({go,register,db}){const[form,setForm]=useState({name:'',university:'COMSATS University Islamabad, Vehari Campus'", "function Register({go,register,db,selectedCompetitionId}){const[form,setForm]=useState({competitionId:selectedCompetitionId||'',name:'',university:'COMSATS University Islamabad, Vehari Campus'");
+fs.writeFileSync(p,s);

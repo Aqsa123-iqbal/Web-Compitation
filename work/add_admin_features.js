@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+const p='src/App.jsx';let s=fs.readFileSync(p,'utf8');
+s=s.replace("import { CompetitionListings, CompetitionDetails } from './CompetitionPages';", "import { CompetitionListings, CompetitionDetails } from './CompetitionPages';\nimport EmailAnnouncements from './EmailAnnouncements';");
+s=s.replace('function Admin({db,setDb,go,updateParticipant,toast,saveConfig,backendReady})', 'function Admin({db,setDb,go,updateParticipant,toast,saveConfig,saveCompetitionRecord,deleteCompetitionRecord,backendReady})');
+s=s.replace("[['overview','Overview'],['participants','Participants'],['payments','Payments'],['evaluation','Evaluation'],['settings','Competition setup']]", "[['overview','Overview'],['participants','Participants'],['payments','Payments'],['evaluation','Evaluation'],['competitions','Manage competitions'],['announcements','Email & announcements'],['settings','Competition setup']]");
+const marker="{tab==='participants'&&<section className=\"panel admin-panel\">";
+const added="{tab==='competitions'&&<CompetitionManager competitions={db.competitions||[]} participants={participants} onSave={saveCompetitionRecord} onDelete={deleteCompetitionRecord} onToast={toast} backendReady={backendReady}/ >}{tab==='announcements'&&<EmailAnnouncements participants={participants} competitions={db.competitions||[]}/ >}"+marker;
+if(!s.includes(marker)) throw new Error('Admin participants tab marker missing');
+s=s.replace(marker,added);
+fs.writeFileSync(p,s);
